@@ -1,11 +1,11 @@
 {
-  "name": "typescript-clean-boilerplate",
+  "name": "node-cache",
   "version": "1.0.0",
-  "description": "Repósitorio template para projetos NodeJs utilizando Typescript, TDD e Clean Architecture",
+  "description": "API de cache usando TDD e Clean Architecture",
   "main": "src/config/server.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flavionobre11/typescript-boilderplate.git"
+    "url": "git+https://github.com/flavionobre11/node-cache.git"
   },
   "keywords": [
     "Template",
@@ -16,9 +16,9 @@
   "author": "Fláio Nobre",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/flavionobre11/typescript-boilderplate/issues"
+    "url": "https://github.com/flavionobre11/node-cache/issues"
   },
-  "homepage": "https://github.com/flavionobre11/typescript-boilderplate#readme",
+  "homepage": "https://github.com/flavionobre11/node-cache#readme",
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
     "lint": "eslint . --ext .ts,.tsx,.js --fix",

@@ -1,19 +1,19 @@
 version: "3"
 
 services:
-  app-repo:
+  node-cache:
     build:
       context: ./
-    container_name: app-repo
+    container_name: node-cache
     tty: true
     entrypoint: sh ./.docker/entrypoint.sh
     ports:
       - 3010:3010
     volumes:
-      - ./:/usr/app-repo/app
+      - ./:/usr/node-cache/app
     networks:
-      - app-repo
+      - node-cache
 
 networks:
-  app-repo:
+  node-cache:
     driver: bridge
