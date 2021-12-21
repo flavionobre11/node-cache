@@ -6,13 +6,28 @@ services:
       context: ./
     container_name: node-cache
     tty: true
-    entrypoint: sh ./.docker/entrypoint.sh
+    entrypoint: sh ./.docker/app-entrypoint.sh
     ports:
       - 3010:3010
     volumes:
       - ./:/usr/node-cache/app
     networks:
       - node-cache
+
+  redis:
+    image: redis:6.2.6
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ./.docker/volumes/redis/:/data
+    environment:
+      - REDIS_PASSWORD=259c1e4f7f0b1c3a18b6bf160d80711638dacc1a4ff0ec89e9ca781a8b0a05ae
+    command: sh -c 'redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}'
+    networks:
+      - node-cache
+    extra_hosts:
+      - host.docker.internal:172.17.0.1
 
 networks:
   node-cache:
