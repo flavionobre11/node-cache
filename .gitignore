@@ -8,7 +8,7 @@ dist
 .env
 
 # npm
-package-lock.json
+# package-lock.json
 
 # others
 .vscode
