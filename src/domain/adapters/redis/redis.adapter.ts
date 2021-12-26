@@ -2,13 +2,20 @@ import { createClient, RedisClientOptions } from "@/infra/cache"
 
 export interface RedisConnectorConfigs extends Omit<RedisClientOptions<never, Record<string, never>>, "modules"> {}
 
+export type RedisClient = ReturnType<typeof createClient>
+
 export default class RedisConnector {
+
+  private _client!: RedisClient
   
-  static async connect(configs?: RedisConnectorConfigs){
-    const client = createClient(configs)
-    await client.connect().catch(error => {
+  constructor(configs?: RedisConnectorConfigs){
+    this._client = createClient(configs) as RedisClient
+  }
+  
+  async connect(){
+    await this._client.connect().catch(error => {
       throw new Error('redis connection error')
     })
-    return client
+    return this._client
   }
 }

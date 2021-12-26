@@ -2,11 +2,16 @@ import RedisConnector from "@/domain/adapters/redis/redis.adapter"
 
 describe("Redis Connector", () => {
 
-  it('should connect successfully passing correct configs', async () => {
-    return expect(RedisConnector.connect()).resolves.toBeDefined()
+  it('should connect successfully passing correct configs', () => {
+    return expect(new RedisConnector().connect()).resolves.toBeDefined()
   })
 
-  it('should connect error passing wrong configs', async () => {
-    return expect(RedisConnector.connect({url: 'localhost:80'})).rejects.toThrowError()
+  it('should connect error passing wrong configs', () => {
+    expect.assertions(1)
+    try {
+      new RedisConnector({url: 'localhost:80'})
+    } catch (err) {
+      return expect(err).toBeInstanceOf(Error)
+    }
   })
 })
