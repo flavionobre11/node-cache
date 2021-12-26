@@ -1,19 +1,4 @@
-import { createClient, RedisClientOptions } from 'redis'
-
-class RedisConnector {
-  
-  static async connect(configs?: RedisConnectorConfigs){
-    const client = createClient(configs)
-    await client.connect().catch(error => {
-      throw new Error('redis connection error')
-    })
-    return client
-  }
-}
-
-
-interface RedisConnectorConfigs extends Omit<RedisClientOptions<never, Record<string, never>>, "modules"> {}
-
+import RedisConnector from "@/domain/adapters/redis/redis.adapter"
 
 describe("Redis Connector", () => {
 
