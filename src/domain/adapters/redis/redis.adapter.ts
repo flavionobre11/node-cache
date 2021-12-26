@@ -1,6 +1,6 @@
-import { createClient, RedisClientOptions } from "@/infra/cache"
+import { createClient } from "@/infra/cache"
 
-export interface RedisConnectorConfigs extends Omit<RedisClientOptions<never, Record<string, never>>, "modules"> {}
+export type RedisConnectorConfigs = Parameters<typeof createClient>[0]
 
 export type RedisClient = ReturnType<typeof createClient>
 
