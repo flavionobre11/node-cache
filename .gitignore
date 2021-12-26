@@ -12,4 +12,4 @@ package-lock.json
 
 # others
 .vscode
-.docker/volumes/redis/appendonly.aof
+.docker/volumes/redis/*

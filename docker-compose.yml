@@ -21,9 +21,7 @@ services:
       - 6379:6379
     volumes:
       - ./.docker/volumes/redis/:/data
-    environment:
-      - REDIS_PASSWORD=259c1e4f7f0b1c3a18b6bf160d80711638dacc1a4ff0ec89e9ca781a8b0a05ae
-    command: sh -c 'redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}'
+    entrypoint: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD}"
     networks:
       - node-cache
     extra_hosts:
