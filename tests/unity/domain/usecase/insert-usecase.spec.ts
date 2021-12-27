@@ -1,46 +1,6 @@
+import RedisDriver from '@/domain/adapters/redis/redis-driver';
 import { RedisClient } from '@/domain/adapters/redis/redis.adapter';
-
-class InsertValue {
-  constructor(private readonly redisDriver: RedisDriver) {}
-
-  async perform(key: string, value: string, options?: { exp: number | Date }) {
-    if (!key || typeof key !== 'string')
-      throw new Error('key should be string and not null');
-    if (!value || typeof value !== 'string')
-      throw new Error('value should be string and not null');
-    return await this.redisDriver.set(key, value, options);
-  }
-}
-
-class RedisDriverMock implements RedisDriver {
-  constructor(private readonly redisClient: RedisClient) {}
-
-  async set(key: string, value: string, options?: { exp: number | Date }) {
-    const opt = {};
-    let expires = undefined;
-
-    if (typeof options?.exp === 'number') {
-      Reflect.set(opt, 'PX', options?.exp); // milli unix
-      expires = new Date(Date.now() + options?.exp).toISOString();
-    } else if (options?.exp instanceof Date) {
-      Reflect.set(
-        opt,
-        'EXAT',
-        Number((options?.exp.getTime() / 1000).toFixed(0)),
-      ); // date to unix
-      expires = new Date(options?.exp).toISOString();
-    }
-
-    const result = await this.redisClient.set(key, value, opt);
-    if (!result) throw new Error('value not set');
-
-    return {
-      key,
-      value,
-      expires,
-    };
-  }
-}
+import InsertValue from '@/domain/usecases/insert-value.usecase';
 
 const RedisClientMock = {
   set: jest.fn().mockImplementation((key, value, options?) => {
@@ -48,22 +8,8 @@ const RedisClientMock = {
   }),
 } as Pick<RedisClient, 'set'>;
 
-type RedisDriveSetResponse = {
-  key: string;
-  value: string;
-  expires?: string;
-};
-
-interface RedisDriver {
-  set(
-    key: string,
-    value: string,
-    options?: { exp: number | Date },
-  ): Promise<RedisDriveSetResponse>;
-}
-
 const makeSut = () => {
-  const redisDriver = new RedisDriverMock(RedisClientMock as RedisClient);
+  const redisDriver = new RedisDriver(RedisClientMock as RedisClient);
   const sut = new InsertValue(redisDriver);
   return {
     sut,
