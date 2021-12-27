@@ -4,6 +4,10 @@ class InsertValue {
   constructor(private readonly redisDriver: RedisDriver) {}
 
   async perform(key: string, value: string, options?: { exp: number | Date }) {
+    if (!key || typeof key !== 'string')
+      throw new Error('key should be string and not null');
+    // if (!value || typeof value !== 'string')
+    //   throw new Error('key should be string and not null');
     return await this.redisDriver.set(key, value, options);
   }
 }
@@ -100,5 +104,13 @@ describe('InsertValue Usecase', () => {
     expect(result).toHaveProperty('expires');
     expect(typeof result.expires).toBe('string');
     expect(result.expires).toBe(expiresIn.toISOString());
+  });
+
+  it('should thrown excpetion if was a null key', async () => {
+    const { sut } = makeSut();
+    const resultPromise = sut.perform('', 'any_value');
+    await expect(resultPromise).rejects.toThrowError(
+      'key should be string and not null',
+    );
   });
 });
