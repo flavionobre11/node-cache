@@ -6,8 +6,8 @@ class InsertValue {
   async perform(key: string, value: string, options?: { exp: number | Date }) {
     if (!key || typeof key !== 'string')
       throw new Error('key should be string and not null');
-    // if (!value || typeof value !== 'string')
-    //   throw new Error('key should be string and not null');
+    if (!value || typeof value !== 'string')
+      throw new Error('value should be string and not null');
     return await this.redisDriver.set(key, value, options);
   }
 }
@@ -111,6 +111,14 @@ describe('InsertValue Usecase', () => {
     const resultPromise = sut.perform('', 'any_value');
     await expect(resultPromise).rejects.toThrowError(
       'key should be string and not null',
+    );
+  });
+
+  it('should thrown excpetion if was a null value', async () => {
+    const { sut } = makeSut();
+    const resultPromise = sut.perform('any_key:without_value', '');
+    await expect(resultPromise).rejects.toThrowError(
+      'value should be string and not null',
     );
   });
 });
