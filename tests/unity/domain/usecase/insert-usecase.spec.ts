@@ -36,12 +36,19 @@ interface RedisDriver {
   set(key: string, value: string): Promise<RedisDriveSetResponse>;
 }
 
+const makeSut = () => {
+  const redisDriver = new RedisDriverMock(RedisClientMock as RedisClient);
+  const sut = new InsertValue(redisDriver);
+  return {
+    sut,
+  };
+};
+
 describe('InsertValue Usecase', () => {
   it('should be insert an key-value registry', async () => {
     const key = 'any_key';
     const value = 'any_value';
-    const redisDriver = new RedisDriverMock(RedisClientMock as RedisClient);
-    const sut = new InsertValue(redisDriver);
+    const { sut } = makeSut();
 
     const resultPromise = sut.perform(key, value);
     await expect(resultPromise).resolves.toMatchObject({
