@@ -15,6 +15,7 @@ const RedisClientMock = {
 class GetCommand {
   static async perform(redisClient: RedisClient, key: string) {
     if (!redisClient) throw new Error('redisClient is required');
+    if (!key) throw new Error('key are required');
     return await redisClient.get(key);
   }
 }
@@ -26,5 +27,18 @@ describe('GetCommand Usecase', () => {
     RedisClientMock.set(key, value);
     const resultPromise = GetCommand.perform(RedisClientMock, key);
     await expect(resultPromise).resolves.toMatch(value);
+  });
+
+  it('should thrown excpetion if redisClient is null', async () => {
+    const resultPromise = GetCommand.perform(
+      null as unknown as RedisClient,
+      'any_key',
+    );
+    await expect(resultPromise).rejects.toThrowError('redisClient is required');
+  });
+
+  it('should thrown excpetion if key is null', async () => {
+    const resultPromise = GetCommand.perform(RedisClientMock, '');
+    await expect(resultPromise).rejects.toThrowError('key are required');
   });
 });
