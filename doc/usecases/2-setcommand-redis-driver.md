@@ -5,7 +5,7 @@
 1. fazer parse das propriedades de configuração. Atuais:
 
    ```ts
-   type RedisSetCommandConfigs = {
+   type RedisSetCommandOptions = {
      exp: string | Date;
    };
    ```
