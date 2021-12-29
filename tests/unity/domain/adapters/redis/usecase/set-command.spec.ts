@@ -50,4 +50,31 @@ describe('SetCommand Usecase', () => {
       expires: expiresIn.toISOString(),
     });
   });
+
+  it('should thrown excpetion if redisClient is null', async () => {
+    const resultPromise = SetCommand.perform(
+      null as unknown as RedisClient,
+      'any_key:redisclient:null',
+      'any_value',
+    );
+    await expect(resultPromise).rejects.toThrowError('redisClient is required');
+  });
+
+  it('should thrown excpetion if key is null', async () => {
+    const resultPromise = SetCommand.perform(RedisClientMock, '', 'any_value');
+    await expect(resultPromise).rejects.toThrowError(
+      'key and value are required',
+    );
+  });
+
+  it('should thrown excpetion if value is null', async () => {
+    const resultPromise = SetCommand.perform(
+      RedisClientMock,
+      'any_key:value:null',
+      '',
+    );
+    await expect(resultPromise).rejects.toThrowError(
+      'key and value are required',
+    );
+  });
 });

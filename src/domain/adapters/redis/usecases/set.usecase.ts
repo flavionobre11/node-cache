@@ -9,6 +9,9 @@ export default class SetCommand {
     value: string,
     options?: RedisSetCommandOptions,
   ) {
+    if (!redisClient) throw new Error('redisClient is required');
+    if (!key || !value) throw new Error('key and value are required');
+
     const { parsedOptions, expires } = SetCommand.parseOptions(options);
     const result = await redisClient.set(key, value, parsedOptions);
     if (!result) throw new Error('value not set');
