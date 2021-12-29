@@ -1,5 +1,5 @@
 import RedisDriver from '@/domain/adapters/redis/redis-driver';
-import { RedisClient } from '@/domain/adapters/redis/redis.adapter';
+import { RedisClient } from '@/domain/adapters/redis/redis-connector';
 import InsertValue from '@/domain/usecases/insert-value.usecase';
 
 const RedisClientMock = {

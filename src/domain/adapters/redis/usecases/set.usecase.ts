@@ -1,4 +1,4 @@
-import { RedisClient } from '../redis.adapter';
+import { RedisClient } from '../redis-connector';
 
 export type RedisDriverSetOptions = { exp: number | Date };
 

@@ -1,5 +1,5 @@
 import { CacheDriver } from '@/domain/models/cache-drive.model';
-import { RedisClient } from './redis.adapter';
+import { RedisClient } from './redis-connector';
 import SetCommand, { RedisDriverSetOptions } from './usecases/set.usecase';
 
 export default class RedisDriver implements CacheDriver {
