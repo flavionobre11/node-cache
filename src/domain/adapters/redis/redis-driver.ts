@@ -6,6 +6,6 @@ export default class RedisDriver implements CacheDriver {
   constructor(private readonly redisClient: RedisClient) {}
 
   async set(key: string, value: string, options?: RedisDriverSetOptions) {
-    return await SetCommand.perform(this.redisClient, key, value, options);
+    return SetCommand.perform(this.redisClient, key, value, options);
   }
 }
