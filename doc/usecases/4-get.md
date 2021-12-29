@@ -6,5 +6,4 @@
 
 ## Alternative flow: propriedades invalidas
 
-1. se não houver redisClient, entao thrown exception "redisClient is required"
-2. se nao houver key, entao thrown exception "key are required"
+1. se nao houver key, entao thrown exception "key are required for search an value"
