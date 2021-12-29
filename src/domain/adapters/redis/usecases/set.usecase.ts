@@ -1,13 +1,13 @@
 import { RedisClient } from '../redis-connector';
 
-export type RedisDriverSetOptions = { exp: number | Date };
+export type RedisSetCommandOptions = { exp: number | Date };
 
 export default class SetCommand {
   static async perform(
     redisClient: RedisClient,
     key: string,
     value: string,
-    options?: RedisDriverSetOptions,
+    options?: RedisSetCommandOptions,
   ) {
     const { parsedOptions, expires } = SetCommand.parseOptions(options);
     const result = await redisClient.set(key, value, parsedOptions);
@@ -20,7 +20,7 @@ export default class SetCommand {
     };
   }
 
-  private static parseOptions(options?: RedisDriverSetOptions) {
+  private static parseOptions(options?: RedisSetCommandOptions) {
     const parsedOptions = {};
     let expires = undefined;
     if (!options)
@@ -44,14 +44,14 @@ export default class SetCommand {
         }
       },
     } as {
-      [key in keyof Required<RedisDriverSetOptions>]: (
-        param: RedisDriverSetOptions[key],
+      [key in keyof Required<RedisSetCommandOptions>]: (
+        param: RedisSetCommandOptions[key],
       ) => void;
     };
 
     const keys = Object.keys(
       options,
-    ) as unknown as (keyof RedisDriverSetOptions)[];
+    ) as unknown as (keyof RedisSetCommandOptions)[];
 
     keys.forEach((key) => OPTIONS_TO_PARSE[key](Reflect.get(options, key)));
     return {
