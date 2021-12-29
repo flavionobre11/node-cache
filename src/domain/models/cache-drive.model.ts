@@ -4,6 +4,8 @@ export interface CacheDriver {
     value: string,
     options?: { exp: number | Date },
   ): Promise<DriverSetResponse>;
+
+  get(key: string): Promise<string | null>;
 }
 
 export type DriverSetResponse = {
