@@ -34,4 +34,20 @@ describe('SetCommand Usecase', () => {
       expires: new Date(Date.now() + expiresIn).toISOString(),
     });
   });
+
+  it('should be possible set an registry with TTL in Date and return key, value and expires in ISOString', async () => {
+    const key = 'any_key:expires:1day';
+    const value = 'any_value';
+    const expiresIn = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    const resultPromise = SetCommand.perform(RedisClientMock, key, value, {
+      exp: expiresIn,
+    });
+    await expect(resultPromise).resolves.toMatchObject<
+      Required<DriverSetResponse>
+    >({
+      key: key,
+      value: value,
+      expires: expiresIn.toISOString(),
+    });
+  });
 });
