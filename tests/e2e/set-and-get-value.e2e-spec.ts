@@ -39,7 +39,7 @@ describe('Set and Get value on cache', () => {
     const { insertValue, getValue } = await makeSut();
     const toTest = {
       key: 'key:e2e-test:deadline',
-      value: 'deadline in 4 seconds',
+      value: 'deadline in 2 seconds',
       expires: 2 * 1000,
     };
     const insertResult = await insertValue.perform(toTest.key, toTest.value, {
