@@ -1,4 +1,5 @@
 import { RedisClient } from '@/domain/adapters/redis/redis-connector';
+import GetCommand from '@/domain/adapters/redis/usecases/get.usecase';
 
 const VALUES: { [key: string]: string } = {};
 
@@ -11,14 +12,6 @@ const RedisClientMock = {
     return await Reflect.get(VALUES, key);
   }),
 } as Pick<RedisClient, 'get' | 'set'> as RedisClient;
-
-class GetCommand {
-  static async perform(redisClient: RedisClient, key: string) {
-    if (!redisClient) throw new Error('redisClient is required');
-    if (!key) throw new Error('key are required');
-    return await redisClient.get(key);
-  }
-}
 
 describe('GetCommand Usecase', () => {
   it('should return the value related to the key passed as parameter', async () => {
