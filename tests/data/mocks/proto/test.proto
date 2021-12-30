@@ -1,16 +1,16 @@
 syntax = "proto3";
 
-package testRegistryPackage;
+package testRegisterPackage;
 
-message SaveRegistryRequest{
+message SaveRegisterRequest{
   required string key = 1;
   required string value = 2;
 }
 
-message SaveRegistryResponse{
+message SaveRegisterResponse{
   required string result = 1;
 }
 
-service RegistryService{
-  rpc SaveRegistry (SaveRegistryRequest) returns (SaveRegistryResponse) {}
+service RegisterService{
+  rpc SaveRegister (SaveRegisterRequest) returns (SaveRegisterResponse) {}
 }
