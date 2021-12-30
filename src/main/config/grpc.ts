@@ -1,13 +1,7 @@
 import { Server, ServerCredentials } from '@grpc/grpc-js';
-import { PackageDefinition } from '@grpc/proto-loader';
 
 export interface GrpcAppConfigs {
   host: string;
-}
-
-export default interface GRPCModule {
-  packageDefinition: PackageDefinition;
-  initProtoServices(gRPCServer: Server): void;
 }
 
 export default class GrpcApp {
