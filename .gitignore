@@ -10,6 +10,9 @@ dist
 # npm
 package-lock.json
 
+# proto
+**/**/proto-types/*
+
 # others
 .vscode
 .docker/volumes/redis/*
