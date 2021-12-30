@@ -23,7 +23,6 @@ const makeSut = () => {
 describe('GRPC Module Factory', () => {
   it('should load proto definitions', () => {
     const { sut } = makeSut();
-    console.log(sut.proto);
     expect(sut.proto).toBeDefined();
   });
 });
