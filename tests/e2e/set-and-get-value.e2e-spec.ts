@@ -4,7 +4,7 @@ import InsertValueCache, {
   InsertValue,
 } from '@/domain/usecases/insert-value.usecase';
 import { RedisCliente2eTest } from '../utils/get-redis-client.util';
-import { sleep } from '../utils/sleep.util';
+import { sleep } from '../utils/common.util';
 
 const makeSut = async () => {
   const redisDriver = new RedisDriver(await RedisCliente2eTest());
