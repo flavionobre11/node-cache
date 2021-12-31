@@ -1,6 +1,6 @@
 import { RedisClient } from '@/domain/adapters/redis/redis-connector';
 import SetCommand from '@/domain/adapters/redis/usecases/set.usecase';
-import { DriverSetResponse } from '@/domain/models/cache-drive.model';
+import { InsertValue } from '@/domain/usecases/insert-value.usecase';
 
 const RedisClientMock = {
   set: jest.fn().mockImplementation((key, value, options?) => {
@@ -13,7 +13,7 @@ describe('SetCommand Usecase', () => {
     const key = 'any_key:test';
     const value = 'any_value';
     const resultPromise = SetCommand.perform(RedisClientMock, key, value);
-    await expect(resultPromise).resolves.toMatchObject<DriverSetResponse>({
+    await expect(resultPromise).resolves.toMatchObject<InsertValue.Response>({
       key: key,
       value: value,
     });
@@ -38,7 +38,7 @@ describe('SetCommand Usecase', () => {
       exp: expiresIn,
     });
     await expect(resultPromise).resolves.toMatchObject<
-      Required<DriverSetResponse>
+      Required<InsertValue.Response>
     >({
       key: key,
       value: value,
