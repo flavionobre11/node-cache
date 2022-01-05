@@ -24,15 +24,32 @@ type Response<T = any> = {
   data?: T;
 };
 
+interface Validation {
+  validate(input: any): Error;
+}
+
+class MissingPropertiesValidator implements Validation {
+  error: Error = null;
+  validate(prop: any) {
+    if (!prop) return new Error('');
+    return null as unknown as Error;
+  }
+}
+
 class InsertRegisterController implements Controller {
-  constructor(private readonly insertValue: InsertValue) {}
+  constructor(
+    private readonly insertValue: InsertValue,
+    private readonly validation: Validation,
+  ) {}
   async handle(request: InsertRegisterController.Request): Promise<Response> {
     try {
-      const result = await this.insertValue.perform(
-        request.key,
-        request.value,
-        request.options,
-      );
+      const { key, value, options } = request;
+      if (!key || !value)
+        return {
+          statusCode: 400,
+          data: { message: 'key and value is required' },
+        };
+      const result = await this.insertValue.perform(key, value, options);
       return {
         statusCode: 201,
         data: result,
@@ -40,6 +57,9 @@ class InsertRegisterController implements Controller {
     } catch (err) {
       return {
         statusCode: 500,
+        data: {
+          message: 'Error on insert register',
+        },
       };
     }
   }
@@ -74,6 +94,13 @@ describe('Insert Register Controller', () => {
     const { insertValueCache, sut } = makeSut();
     jest.spyOn(insertValueCache, 'perform').mockImplementationOnce(throwError);
     const result = await sut.handle(mockRequest);
+    expect(result.statusCode).toBe(500);
+    console.log(result);
+  });
+
+  it('should return 500 if insert throws', async () => {
+    const { sut } = makeSut();
+    const result = await sut.handle(jest.mock);
     expect(result.statusCode).toBe(500);
     console.log(result);
   });
