@@ -10,7 +10,6 @@ class InsertValueCacheSpy implements InsertValue {
     return {
       key,
       value,
-      expires: new Date(Date.now() + (options?.exp as number)).toISOString(),
     };
   }
 }
@@ -25,14 +24,14 @@ type Response<T = any> = {
 };
 
 interface Validation {
-  validate(input: any): Error;
+  validate(input: any): Error | void | Promise<Error | void>;
 }
 
 class MissingPropertiesValidator implements Validation {
-  error: Error = null;
-  validate(prop: any) {
-    if (!prop) return new Error('');
-    return null as unknown as Error;
+  validate(props: {[key: string]: any}): Error | void {
+    if (!props) return new Error('');
+    const foundInvalid = Object.keys(props).find(key => !props[key])
+    if(foundInvalid) return new Error(`property ${foundInvalid} is required`)
   }
 }
 
@@ -44,11 +43,16 @@ class InsertRegisterController implements Controller {
   async handle(request: InsertRegisterController.Request): Promise<Response> {
     try {
       const { key, value, options } = request;
-      if (!key || !value)
+      const error = this.validation.validate({key, value}) as Error
+      if(error){
         return {
           statusCode: 400,
-          data: { message: 'key and value is required' },
-        };
+          data: {
+            message: error.message
+          }
+        }
+      }
+      
       const result = await this.insertValue.perform(key, value, options);
       return {
         statusCode: 201,
@@ -77,6 +81,7 @@ const makeSut = () => {
   const insertValueCache = new InsertValueCacheSpy();
   const insertRegisterController = new InsertRegisterController(
     insertValueCache,
+    new MissingPropertiesValidator()
   );
   return {
     insertValueCache,
@@ -95,13 +100,40 @@ describe('Insert Register Controller', () => {
     jest.spyOn(insertValueCache, 'perform').mockImplementationOnce(throwError);
     const result = await sut.handle(mockRequest);
     expect(result.statusCode).toBe(500);
-    console.log(result);
   });
 
-  it('should return 500 if insert throws', async () => {
+  it('should return 400 if key is bad value', async () => {
     const { sut } = makeSut();
-    const result = await sut.handle(jest.mock);
-    expect(result.statusCode).toBe(500);
-    console.log(result);
+    const result = await sut.handle({key: '', value: 'any_value'});
+    expect(result).toMatchObject<Response>({
+      statusCode: 400,
+      data: {
+        message: 'property key is required' 
+      }
+    })
+  });
+
+  it('should return 400 if value is bad value', async () => {
+    const { sut } = makeSut();
+    const result = await sut.handle({key: 'any_key', value: ''});
+    expect(result).toMatchObject<Response>({
+      statusCode: 400,
+      data: {
+        message: 'property value is required' 
+      }
+    })
+  });
+
+  it('should return 201 if register successfully', async () => {
+    const { sut } = makeSut();
+    const { value, key } = mockRequest
+    const result = await sut.handle({ value, key });
+    expect(result).toMatchObject<Response>({
+      statusCode: 201,
+      data: {
+        key,
+        value
+      } as InsertValue.Response
+    })
   });
 });
