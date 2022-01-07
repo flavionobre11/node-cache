@@ -1,4 +1,6 @@
 import { InsertValue } from '@/domain/usecases/insert-value.usecase';
+import Controller from '@/presentation/protocols/controller';
+import { gRPCResponse } from '@/presentation/protocols/grpc';
 import Validation from '@/presentation/protocols/validation';
 import { throwError } from '@/tests/utils/common.util';
 import MissingPropertiesValidator from '@/validation/validators/missing-properties.validator';
@@ -16,21 +18,12 @@ class InsertValueCacheSpy implements InsertValue {
   }
 }
 
-interface Controller<T = any, S = any> {
-  handle(request: T): Promise<Response<S>>;
-}
-
-type Response<T = any> = {
-  statusCode: number;
-  data?: T;
-};
-
 class InsertRegisterController implements Controller {
   constructor(
     private readonly insertValue: InsertValue,
     private readonly validation: Validation,
   ) {}
-  async handle(request: InsertRegisterController.Request): Promise<Response> {
+  async handle(request: InsertRegisterController.Request) {
     try {
       const { key, value, options } = request;
       const error = this.validation.validate({key, value}) as Error
@@ -95,7 +88,7 @@ describe('Insert Register Controller', () => {
   it('should return 400 if key is bad value', async () => {
     const { sut } = makeSut();
     const result = await sut.handle({key: '', value: 'any_value'});
-    expect(result).toMatchObject<Response>({
+    expect(result).toMatchObject<gRPCResponse>({
       statusCode: 400,
       data: {
         message: 'property key is required' 
@@ -106,7 +99,7 @@ describe('Insert Register Controller', () => {
   it('should return 400 if value is bad value', async () => {
     const { sut } = makeSut();
     const result = await sut.handle({key: 'any_key', value: ''});
-    expect(result).toMatchObject<Response>({
+    expect(result).toMatchObject<gRPCResponse>({
       statusCode: 400,
       data: {
         message: 'property value is required' 
@@ -118,7 +111,7 @@ describe('Insert Register Controller', () => {
     const { sut } = makeSut();
     const { value, key } = mockRequest
     const result = await sut.handle({ value, key });
-    expect(result).toMatchObject<Response>({
+    expect(result).toMatchObject<gRPCResponse>({
       statusCode: 201,
       data: {
         key,
