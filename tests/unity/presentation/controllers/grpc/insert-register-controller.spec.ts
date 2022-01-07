@@ -1,5 +1,7 @@
 import { InsertValue } from '@/domain/usecases/insert-value.usecase';
+import Validation from '@/presentation/protocols/validation';
 import { throwError } from '@/tests/utils/common.util';
+import MissingPropertiesValidator from '@/validation/validators/missing-properties.validator';
 
 class InsertValueCacheSpy implements InsertValue {
   async perform(
@@ -22,18 +24,6 @@ type Response<T = any> = {
   statusCode: number;
   data?: T;
 };
-
-interface Validation {
-  validate(input: any): Error | void | Promise<Error | void>;
-}
-
-class MissingPropertiesValidator implements Validation {
-  validate(props: {[key: string]: any}): Error | void {
-    if (!props) return new Error('');
-    const foundInvalid = Object.keys(props).find(key => !props[key])
-    if(foundInvalid) return new Error(`property ${foundInvalid} is required`)
-  }
-}
 
 class InsertRegisterController implements Controller {
   constructor(
