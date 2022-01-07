@@ -22,12 +22,11 @@ export interface GRPCModuleConfigs {
   pdOptions?: Options; // path definition options
 }
 
-export default class GRPCModule<T> {
+export default class GRPCModule<T = any> {
   public packageDefinition;
   public proto;
 
   constructor(
-    private readonly gRPCServer: Server,
     private readonly configs: GRPCModuleConfigs = DEFAULT_MODULE_CONFIGS,
   ) {
     this.packageDefinition = loadSync(
@@ -38,9 +37,10 @@ export default class GRPCModule<T> {
   }
 
   loadService(
+    gRPCServer: Server,
     service: ServiceDefinition<UntypedServiceImplementation>,
     implementation: UntypedServiceImplementation,
   ) {
-    this.gRPCServer.addService(service, implementation);
+    gRPCServer.addService(service, implementation);
   }
 }

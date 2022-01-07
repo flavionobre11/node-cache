@@ -1,11 +1,9 @@
 import GRPCModule from '@/main/factories/grpc-module.factory';
 import { ProtoGrpcType } from '@/tests/data/mocks/proto/proto-types/test';
-import { Server } from '@grpc/grpc-js';
 import { resolve } from 'path';
 
 const makeSut = () => {
-  const gRPCServer = new Server();
-  const testProtoModule = new GRPCModule<ProtoGrpcType>(gRPCServer, {
+  const testProtoModule = new GRPCModule<ProtoGrpcType>({
     filePath: resolve(
       __dirname,
       '..',
