@@ -1,7 +1,6 @@
 import { InsertValue } from '@/domain/usecases/insert-value.usecase';
-import Controller from '@/presentation/protocols/controller';
+import { InsertRegisterController } from '@/presentation/controllers/insert-register.controller';
 import { gRPCResponse } from '@/presentation/protocols/grpc';
-import Validation from '@/presentation/protocols/validation';
 import { throwError } from '@/tests/utils/common.util';
 import MissingPropertiesValidator from '@/validation/validators/missing-properties.validator';
 
@@ -16,48 +15,6 @@ class InsertValueCacheSpy implements InsertValue {
       value,
     };
   }
-}
-
-class InsertRegisterController implements Controller {
-  constructor(
-    private readonly insertValue: InsertValue,
-    private readonly validation: Validation,
-  ) {}
-  async handle(request: InsertRegisterController.Request) {
-    try {
-      const { key, value, options } = request;
-      const error = this.validation.validate({key, value}) as Error
-      if(error){
-        return {
-          statusCode: 400,
-          data: {
-            message: error.message
-          }
-        }
-      }
-      
-      const result = await this.insertValue.perform(key, value, options);
-      return {
-        statusCode: 201,
-        data: result,
-      };
-    } catch (err) {
-      return {
-        statusCode: 500,
-        data: {
-          message: 'Error on insert register',
-        },
-      };
-    }
-  }
-}
-
-export namespace InsertRegisterController {
-  export type Request = {
-    key: string;
-    value: string;
-    options?: InsertValue.Options;
-  };
 }
 
 const makeSut = () => {
