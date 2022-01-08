@@ -1,15 +1,11 @@
+import { InsertValue } from '../usecases/insert-value.usecase';
+
 export interface CacheDriver {
   set(
     key: string,
     value: string,
-    options?: { exp: number | Date },
-  ): Promise<DriverSetResponse>;
+    options?: InsertValue.Options,
+  ): Promise<InsertValue.Response>;
 
   get(key: string): Promise<string | null>;
 }
-
-export type DriverSetResponse = {
-  key: string;
-  value: string;
-  expires?: string;
-};

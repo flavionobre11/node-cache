@@ -1,6 +1,6 @@
 import RedisDriver from '@/domain/adapters/redis/redis-driver';
 import { RedisClient } from '@/domain/adapters/redis/redis-connector';
-import InsertValue from '@/domain/usecases/insert-value.usecase';
+import InsertValueCache from '@/domain/usecases/insert-value.usecase';
 
 const RedisClientMock = {
   set: jest.fn().mockImplementation((key, value, options?) => {
@@ -10,7 +10,7 @@ const RedisClientMock = {
 
 const makeSut = () => {
   const redisDriver = new RedisDriver(RedisClientMock as RedisClient);
-  const sut = new InsertValue(redisDriver);
+  const sut = new InsertValueCache(redisDriver);
   return {
     sut,
   };

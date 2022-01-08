@@ -1,9 +1,13 @@
-import { App } from './config/App'
+import GrpcApp from './config/grpc';
+import InsertRegisterModule from './config/grpc/modules/insert-register.module';
 
-function bootstrap () {
-  const app = new App().initialiaze()
-  const PORT = process.env.APP_PORT
-  app.listen(PORT, () => console.log(`[App] app listen on port ${PORT}`))
+
+async function bootstrap () {
+  const app = new GrpcApp({
+    host: process.env.GRPC_HOST as string,
+    modules: [new InsertRegisterModule()]
+  })
+  await app.listen()
 }
 
 bootstrap()

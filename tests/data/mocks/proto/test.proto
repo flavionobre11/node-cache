@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package testRegisterPackage;
+
+message SaveRegisterRequest{
+  required string key = 1;
+  required string value = 2;
+}
+
+message SaveRegisterResponse{
+  required string result = 1;
+}
+
+service RegisterService{
+  rpc SaveRegister (SaveRegisterRequest) returns (SaveRegisterResponse) {}
+}

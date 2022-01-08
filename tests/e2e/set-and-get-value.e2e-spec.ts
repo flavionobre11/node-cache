@@ -1,13 +1,14 @@
 import RedisDriver from '@/domain/adapters/redis/redis-driver';
-import { DriverSetResponse } from '@/domain/models/cache-drive.model';
 import GetValue from '@/domain/usecases/get-value.usecase';
-import InsertValue from '@/domain/usecases/insert-value.usecase';
+import InsertValueCache, {
+  InsertValue,
+} from '@/domain/usecases/insert-value.usecase';
 import { RedisCliente2eTest } from '../utils/get-redis-client.util';
-import { sleep } from '../utils/sleep.util';
+import { sleep } from '../utils/common.util';
 
 const makeSut = async () => {
   const redisDriver = new RedisDriver(await RedisCliente2eTest());
-  const insertValue = new InsertValue(redisDriver);
+  const insertValue = new InsertValueCache(redisDriver);
   const getValue = new GetValue(redisDriver);
   return {
     insertValue,
@@ -22,7 +23,7 @@ describe('Set and Get value on cache', () => {
   it('should insert an registry on cache', async () => {
     const { insertValue } = await makeSut();
     const result = insertValue.perform(key, value);
-    await expect(result).resolves.toMatchObject<DriverSetResponse>({
+    await expect(result).resolves.toMatchObject<InsertValue.Response>({
       key: key,
       value: value,
     });
