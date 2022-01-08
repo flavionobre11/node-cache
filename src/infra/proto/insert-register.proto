@@ -5,12 +5,16 @@ package InsertRegisterPackage;
 message SaveRegisterRequest{
   required string key = 1;
   required string value = 2;
+  optional Options options = 3;
+}
+
+message Options {
+  string exp = 1;
 }
 
 message SaveRegisterResponse{
-  required string key = 1;
-  required string value = 2;
-  string expires = 3;
+  required int32 statusCode = 1;
+  required string data = 2;
 }
 
 service RegisterService{
