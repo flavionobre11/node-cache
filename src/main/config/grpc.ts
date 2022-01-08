@@ -11,6 +11,7 @@ export default class GrpcApp {
 
   constructor(private readonly gRPCConfigs: GrpcAppConfigs) {
     this.gRPCServer = new Server();
+    this.loadModules()
   }
 
   loadModules(){
