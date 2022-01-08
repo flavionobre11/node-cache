@@ -9,10 +9,13 @@ services:
     entrypoint: sh ./.docker/app-entrypoint.sh
     ports:
       - 3010:3010
+      - 50051:50051
     volumes:
       - ./:/usr/node-cache/app
     networks:
       - node-cache
+    extra_hosts:
+      - host.docker.internal:172.17.0.1
 
   redis:
     image: redis:6.2.6

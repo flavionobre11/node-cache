@@ -12,4 +12,4 @@ RUN npm install --silent
 
 COPY . .
 
-EXPOSE 3010
+EXPOSE 3010 50051
