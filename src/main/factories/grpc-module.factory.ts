@@ -18,6 +18,8 @@ export default class GRPCModule<T = any> {
   public packageDefinition;
   public proto;
 
+  private services: GRPCModule.GRPCServices[] = []
+
   constructor(private readonly configs: GRPCModule.Configs) {
     this.packageDefinition = loadSync(
       this.configs.filePath,
@@ -26,9 +28,12 @@ export default class GRPCModule<T = any> {
     this.proto = loadPackageDefinition(this.packageDefinition) as unknown as T;
   }
 
+  registerService(service: GRPCModule.GRPCServices){
+    this.services.push(service)
+  }
+
   loadService(gRPCServer: Server) {
-    const services = this.configs.services;
-    services.forEach((serviceToLoad) =>
+    this.services.forEach((serviceToLoad) =>
       gRPCServer.addService(
         serviceToLoad.service,
         serviceToLoad.implementation,
@@ -41,7 +46,6 @@ export namespace GRPCModule {
   export interface Configs {
     filePath: string;
     pdOptions?: Options; // path definition options
-    services: GRPCServices[];
   }
 
   export type GRPCServices = {

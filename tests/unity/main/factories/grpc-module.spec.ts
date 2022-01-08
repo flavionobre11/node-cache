@@ -14,7 +14,6 @@ const makeSut = () => {
       'proto',
       'test.proto',
     ),
-    services: []
   });
   return { sut: testProtoModule };
 };
